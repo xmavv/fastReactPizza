@@ -158,8 +158,6 @@ export async function action({ request }) {
     priority: data.priority === 'true',
   };
 
-  console.log(order);
-
   // tutaj mozemy ladna walidacje zrobic
   const errors = {};
   if (!isValidPhone(order.phone))
