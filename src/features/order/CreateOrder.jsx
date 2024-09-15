@@ -1,11 +1,5 @@
 import { useState } from 'react';
-import {
-  Form,
-  redirect,
-  useActionData,
-  useNavigate,
-  useNavigation,
-} from 'react-router-dom';
+import { Form, redirect, useActionData, useNavigation } from 'react-router-dom';
 import { createOrder } from '../../services/apiRestaurant';
 import Button from '../../ui/Button';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,13 +7,7 @@ import { fetchAddress, getUser } from '../user/userSlice';
 import { clearCart, getCart, getTotalCartPrice } from '../cart/cartSlice';
 import EmptyCart from './../cart/EmptyCart';
 import store from './../../store';
-import { formatCurrency } from '../../utils/helpers';
-
-// https://uibakery.io/regex-library/phone-number
-const isValidPhone = (str) =>
-  /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(
-    str,
-  );
+import { formatCurrency, isValidPhone } from '../../utils/helpers';
 
 function CreateOrder() {
   const [withPriority, setWithPriority] = useState(false);
@@ -103,7 +91,7 @@ function CreateOrder() {
                   dispatch(fetchAddress());
                 }}
               >
-                get position
+                Get position
               </Button>
             </span>
           )}
@@ -157,6 +145,7 @@ export async function action({ request }) {
     cart: JSON.parse(data.cart),
     priority: data.priority === 'true',
   };
+  console.log(order);
 
   // tutaj mozemy ladna walidacje zrobic
   const errors = {};
@@ -173,7 +162,7 @@ export async function action({ request }) {
   // DO NOT OVERUSE
   store.dispatch(clearCart());
 
-  return redirect(`/order/${newOrder.id}`);
+  return redirect(`/order/${newOrder.id}?tel=${data.phone}`);
 }
 
 export default CreateOrder;

@@ -2,7 +2,7 @@
 
 import OrderItem from './OrderItem';
 
-import { useFetcher, useLoaderData } from 'react-router-dom';
+import { useFetcher, useLoaderData, useSearchParams } from 'react-router-dom';
 import { getOrder } from '../../services/apiRestaurant';
 import {
   calcMinutesLeft,
@@ -11,6 +11,7 @@ import {
 } from '../../utils/helpers';
 import { useEffect } from 'react';
 import UpdateOrder from './UpdateOrder';
+import OrderInfo from './OrderInfo';
 
 // const order = {
 //   id: "ABCDEF",
@@ -50,6 +51,9 @@ import UpdateOrder from './UpdateOrder';
 function Order() {
   const order = useLoaderData();
   const fetcher = useFetcher();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const phoneNumber = Object.fromEntries(searchParams).tel;
 
   useEffect(() => {
     if (!fetcher.data && fetcher.state === 'idle') fetcher.load('/menu');
@@ -58,6 +62,7 @@ function Order() {
   // Everyone can search for all orders, so for privacy reasons we're gonna gonna exclude names or address, these are only for the restaurant staff
   const {
     id,
+    customer,
     status,
     priority,
     priorityPrice,
@@ -125,7 +130,8 @@ function Order() {
         </p>
       </div>
 
-      {!priority && <UpdateOrder order={order} />}
+      <OrderInfo name={customer} phone={phoneNumber} />
+      <UpdateOrder order={order} />
     </div>
   );
 }
